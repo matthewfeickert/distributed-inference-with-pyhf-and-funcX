@@ -70,8 +70,6 @@ def main(args):
     with open("endpoint_id.txt") as endpoint_file:
         pyhf_endpoint = str(endpoint_file.read())
 
-    print(type(bkgonly_workspace))
-    print(bkgonly_workspace)
     # register and execute background only workspace
     prepare_func = fxc.register_function(prepare_workspace)
     infer_func = fxc.register_function(infer_hypotest)
@@ -97,8 +95,7 @@ def main(args):
     print("--------------------")
     print(workspace)
 
-    # n_patches = len(patchset.patches)
-    n_patches = 1
+    n_patches = len(patchset.patches)
     tasks = {}
     for patch_idx in range(n_patches):
         patch = patchset.patches[patch_idx]
@@ -121,7 +118,7 @@ def main(args):
                     )
                     tasks[task]["result"] = result
                 except Exception as excep:
-                    print(excep)
+                    print(f"inference: {excep}")
                     sleep(15)
 
     print("--------------------")
