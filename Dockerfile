@@ -9,5 +9,4 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 COPY requirements.txt .
 RUN pip install --upgrade pip setuptools wheel && \
-    pip install -r requirements.txt && \
-    pip install "funcx-endpoint==0.0.3"
+    pip install -r requirements.txt
