@@ -92,7 +92,7 @@ def main(args):
             workspace = fxc.get_result(prepare_task)
         except Exception as excep:
             print(f"prepare: {excep}")
-            sleep(15)
+            sleep(10)
 
     print("--------------------")
     print(workspace)
