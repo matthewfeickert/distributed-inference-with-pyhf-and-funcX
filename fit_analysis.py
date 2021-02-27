@@ -1,11 +1,12 @@
+import argparse
 import json
 import sys
 from pathlib import Path
 from time import sleep
 
+import pyhf
 import requests
 from funcx.sdk.client import FuncXClient
-import pyhf
 from pyhf.contrib.utils import download
 
 
@@ -15,14 +16,14 @@ def prepare_workspace(data):
     return pyhf.Workspace(data)
 
 
-def infer_hypotest(workspace, metadata, doc):
+def infer_hypotest(workspace, metadata, patches):
     import time
 
     import pyhf
 
     tick = time.time()
     model = workspace.model(
-        patches=[doc],
+        patches=patches,
         modifier_settings={
             "normsys": {"interpcode": "code4"},
             "histosys": {"interpcode": "code4p"},
@@ -45,22 +46,18 @@ def count_complete(l):
     return len(list(filter(lambda e: e["result"], l)))
 
 
-def main():
-    # input_prefix = "input"
-    # pallet_name = "InclSS3L-pallet"
-    # pallet_url = "https://www.hepdata.net/record/resource/1935157?view=true"
-    # analysis_name = "Rpc2L0b"
-    input_prefix = "input"
-    pallet_name = "1Lbb-pallet"
-    pallet_url = "https://www.hepdata.net/record/resource/1408476?view=true"
-    analysis_name = None
+def main(args):
+    if args.config_file is not None:
+        with open(args.config_file, "r") as infile:
+            config = json.load(infile)
 
-    pallet_path = Path(input_prefix).joinpath(pallet_name)
+    pallet_path = Path(config["input_prefix"]).joinpath(config["pallet_name"])
+    analysis_name = config["analysis_name"]
     analysis_prefix_str = "" if analysis_name is None else f"{analysis_name}_"
 
     # locally get pyhf pallet for analysis
     if not pallet_path.exists():
-        download(pallet_url, pallet_path)
+        download(config["pallet_url"], pallet_path)
     with open(
         pallet_path.joinpath(f"{analysis_prefix_str}BkgOnly.json")
     ) as bkgonly_json:
@@ -71,8 +68,10 @@ def main():
     fxc.max_requests = 200
 
     with open("endpoint_id.txt") as endpoint_file:
-        pyhf_endpoint = endpoint_file.read()
+        pyhf_endpoint = str(endpoint_file.read())
 
+    print(type(bkgonly_workspace))
+    print(bkgonly_workspace)
     # register and execute background only workspace
     prepare_func = fxc.register_function(prepare_workspace)
     infer_func = fxc.register_function(infer_hypotest)
@@ -98,7 +97,8 @@ def main():
     print("--------------------")
     print(workspace)
 
-    n_patches = len(patchset.patches)
+    # n_patches = len(patchset.patches)
+    n_patches = 1
     tasks = {}
     for patch_idx in range(n_patches):
         patch = patchset.patches[patch_idx]
@@ -129,4 +129,20 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    cli_parser = argparse.ArgumentParser(
+        description="configuration arguments provided at run time from the CLI"
+    )
+    cli_parser.add_argument(
+        "-c",
+        "--config-file",
+        dest="config_file",
+        type=str,
+        default=None,
+        help="config file",
+    )
+    args, unknown = cli_parser.parse_known_args()
+
+    parser = argparse.ArgumentParser(parents=[cli_parser], add_help=False)
+    args = parser.parse_args()
+
+    main(args)
