@@ -10,3 +10,11 @@ Create a Python 3 virtual environment and then install the dependencies in `requ
 (distributed-inference) $ python -m pip install --upgrade pip setuptools wheel
 (distributed-inference) $ python -m pip install -r requirements.txt
 ```
+
+## Run
+
+Pass the config JSON file for the analysis you want to run to `fit_analysis.json`
+
+```shell
+(distributed-inference) $ python fit_analysis.py -c config/1Lbb.json
+```
