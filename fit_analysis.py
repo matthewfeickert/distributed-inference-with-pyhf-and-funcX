@@ -68,7 +68,7 @@ def main(args):
     fxc.max_requests = 200
 
     with open("endpoint_id.txt") as endpoint_file:
-        pyhf_endpoint = str(endpoint_file.read())
+        pyhf_endpoint = str(endpoint_file.read().rstrip())
 
     # register and execute background only workspace
     prepare_func = fxc.register_function(prepare_workspace)
