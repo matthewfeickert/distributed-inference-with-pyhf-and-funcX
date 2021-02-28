@@ -1,11 +1,9 @@
 import argparse
 import json
-import sys
 from pathlib import Path
 from time import sleep
 
 import pyhf
-import requests
 from funcx.sdk.client import FuncXClient
 from pyhf.contrib.utils import download
 
@@ -52,12 +50,16 @@ def main(args):
             config = json.load(infile)
 
     pallet_path = Path(config["input_prefix"]).joinpath(config["pallet_name"])
-    analysis_name = config["analysis_name"]
-    analysis_prefix_str = "" if analysis_name is None else f"{analysis_name}_"
 
     # locally get pyhf pallet for analysis
     if not pallet_path.exists():
         download(config["pallet_url"], pallet_path)
+
+    analysis_name = config["analysis_name"]
+    analysis_prefix_str = "" if analysis_name is None else f"{analysis_name}_"
+    if config["analysis_dir"] is not None:
+        pallet_path = pallet_path.joinpath(config["analysis_dir"])
+
     with open(
         pallet_path.joinpath(f"{analysis_prefix_str}BkgOnly.json")
     ) as bkgonly_json:
@@ -70,9 +72,11 @@ def main(args):
     with open("endpoint_id.txt") as endpoint_file:
         pyhf_endpoint = str(endpoint_file.read().rstrip())
 
-    # register and execute background only workspace
+    # register functions
     prepare_func = fxc.register_function(prepare_workspace)
     infer_func = fxc.register_function(infer_hypotest)
+
+    # execute background only workspace
     prepare_task = fxc.run(
         bkgonly_workspace, endpoint_id=pyhf_endpoint, function_id=prepare_func
     )
@@ -82,7 +86,6 @@ def main(args):
         pallet_path.joinpath(f"{analysis_prefix_str}patchset.json")
     ) as patchset_json:
         patchset = pyhf.PatchSet(json.load(patchset_json))
-    patch = patchset.patches[0].patch
 
     workspace = None
     while not workspace:
@@ -95,6 +98,7 @@ def main(args):
     print("--------------------")
     print(workspace)
 
+    # execute patch fits across workers and retrieve them when done
     n_patches = len(patchset.patches)
     tasks = {}
     for patch_idx in range(n_patches):
