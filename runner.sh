@@ -21,4 +21,5 @@ do
    # (time python -c "import time; print('hello'); time.sleep(5); print('bye')") > "${output_file}" 2>&1
    (time python fit_analysis.py --config-file "${config_file}") > "${output_file}" 2>&1
    tail -n 4 "${output_file}"
+   sleep 5
 done
