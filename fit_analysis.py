@@ -82,7 +82,7 @@ def main(args):
         pallet_path.joinpath(f"{analysis_prefix_str}patchset.json")
     ) as patchset_json:
         patchset = pyhf.PatchSet(json.load(patchset_json))
-    patch = patchset.patches[0]
+    patch = patchset.patches[0].patch
 
     workspace = None
     while not workspace:
