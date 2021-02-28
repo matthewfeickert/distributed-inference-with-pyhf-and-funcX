@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ignore endpoint id
+endpoint_id.txt
+
+# ignore files
+input/
+output/
