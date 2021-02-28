@@ -4,6 +4,10 @@
 analysis_name="SUSY-2018-04"
 config_file="config/${analysis_name}.json"
 
+if [ ! -d "output/${analysis_name}" ];then
+   mkdir -p "output/${analysis_name}"
+fi
+
 for counter in {1..10}
 do
    output_file="output/${analysis_name}/run_${counter}.log"
