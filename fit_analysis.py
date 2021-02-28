@@ -102,7 +102,7 @@ def main(args):
         task_id = fxc.run(
             workspace,
             patch.metadata,
-            [patch],
+            [patch.patch],
             endpoint_id=pyhf_endpoint,
             function_id=infer_func,
         )
