@@ -1,11 +1,9 @@
 import argparse
 import json
-import sys
 from pathlib import Path
 from time import sleep
 
 import pyhf
-import requests
 from funcx.sdk.client import FuncXClient
 from pyhf.contrib.utils import download
 
