@@ -1,6 +1,6 @@
 {
   "input_prefix": "input",
-  "pallet_name": "SUSY-2018-04-pallet",
+  "pallet_name": "staus-pallet",
   "pallet_url": "https://www.hepdata.net/record/resource/1406212?view=true",
   "analysis_dir": "Region-combined",
   "analysis_name": null
