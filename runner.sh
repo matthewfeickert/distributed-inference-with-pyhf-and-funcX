@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # config_file="config/InclSS3L.json"
-analysis_name="SUSY-2018-04"
+analysis_name="3L-RJ"
 config_file="config/${analysis_name}.json"
 
 if [ ! -d "output/${analysis_name}" ];then
