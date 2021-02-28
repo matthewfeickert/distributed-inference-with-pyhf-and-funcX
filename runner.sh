@@ -1,10 +1,12 @@
 #!/bin/bash
 
-config_file="config/InclSS3L.json"
+# config_file="config/InclSS3L.json"
+analysis_name="SUSY-2018-04"
+config_file="config/${analysis_name}.json"
 
-for counter in {6..10}
+for counter in {1..10}
 do
-   output_file="output/InclSS3L/run_${counter}.log"
+   output_file="output/${analysis_name}/run_${counter}.log"
 
    if [ -f "${output_file}" ];then
       echo "${output_file} already exists"
