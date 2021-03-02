@@ -72,6 +72,8 @@ def main(args):
     # Initialize funcX client
     fxc = FuncXClient()
     fxc.max_requests = 200
+    # Need to force funcX to allow posting of all patches
+    fxc.throttling_enabled = False
 
     with open("endpoint_id.txt") as endpoint_file:
         pyhf_endpoint = str(endpoint_file.read().rstrip())
@@ -104,10 +106,13 @@ def main(args):
 
     # execute patch fits across workers and retrieve them when done
     n_patches = len(patchset.patches)
-    tasks = {}
+    # n_patches = 10
+
+    batch = fxc.create_batch()
+
     for patch_idx in range(n_patches):
         patch = patchset.patches[patch_idx]
-        task_id = fxc.run(
+        batch.add(
             workspace,
             patch.metadata,
             [patch.patch],
@@ -115,23 +120,36 @@ def main(args):
             endpoint_id=pyhf_endpoint,
             function_id=infer_func,
         )
-        tasks[patch.name] = {"id": task_id, "result": None}
 
-    while count_complete(tasks.values()) < n_patches:
-        for task in tasks.keys():
-            if not tasks[task]["result"]:
-                try:
-                    result = fxc.get_result(tasks[task]["id"])
+    # Submit batch job to run
+    batch_task_id_list = fxc.batch_run(batch)
+
+    # While loop info
+    batch_job_finished = False
+    sleep_time = 15
+    completed_task_ids = []
+
+    while not batch_job_finished:
+        batch_job_finished = True
+        sleep(sleep_time)
+        if sleep_time > 5:
+            sleep_time -= 5
+
+        batch_status = fxc.get_batch_status(batch_task_id_list)
+
+        for task_id in batch_status.keys():
+            task = batch_status[task_id]
+            # If any task is still running do another loop
+            if task["pending"]:
+                batch_job_finished = False
+            elif task["status"] == "success":
+                if task_id not in completed_task_ids:
+                    completed_task_ids.append(task_id)
                     print(
-                        f"Task {task} complete, there are {count_complete(tasks.values())+1} results now"
+                        f"Task {task['result']['metadata']['name']} complete: {len(completed_task_ids)}/{n_patches}"
                     )
-                    tasks[task]["result"] = result
-                except Exception as excep:
-                    print(f"inference: {excep}")
-                    sleep(15)
 
-    print("--------------------")
-    print(tasks.values())
+    print(f"\n\nbatch_status for list: {fxc.get_batch_status(batch_task_id_list)}")
 
 
 if __name__ == "__main__":
