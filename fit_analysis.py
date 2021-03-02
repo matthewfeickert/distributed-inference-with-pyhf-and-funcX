@@ -104,7 +104,7 @@ def main(args):
 
     # execute patch fits across workers and retrieve them when done
     n_patches = len(patchset.patches)
-    scaled_n_patches = n_patches * 20
+    scaled_n_patches = n_patches * 5
     tasks = {}
     for patch_idx in range(scaled_n_patches):
         patch = patchset.patches[patch_idx % n_patches]
