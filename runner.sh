@@ -1,16 +1,20 @@
 #!/bin/bash
 
 # config_file="config/InclSS3L.json"
-analysis_name="3L-RJ"
+# analysis_name="3L-RJ"
+analysis_name="1Lbb"
+# analysis_name="staus"
+# analysis_name="InclSS3L"
 config_file="config/${analysis_name}.json"
+output_dir="output/${analysis_name}/batch"
 
-if [ ! -d "output/${analysis_name}" ];then
-   mkdir -p "output/${analysis_name}"
+if [ ! -d "${output_dir}" ];then
+   mkdir -p "${output_dir}"
 fi
 
 for counter in {1..10}
 do
-   output_file="output/${analysis_name}/run_${counter}.log"
+   output_file="${output_dir}/run_${counter}.log"
 
    if [ -f "${output_file}" ];then
       echo "${output_file} already exists"
@@ -18,7 +22,6 @@ do
    fi
    printf "\n* Running test for %s \n\n" "${output_file}"
    # wrap in () to captrue output of time
-   # (time python -c "import time; print('hello'); time.sleep(5); print('bye')") > "${output_file}" 2>&1
    (time python fit_analysis.py --config-file "${config_file}") > "${output_file}" 2>&1
    tail -n 4 "${output_file}"
    sleep 5
