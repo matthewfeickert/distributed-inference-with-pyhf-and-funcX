@@ -158,7 +158,15 @@ def main(args):
             if running_task_status != "success":
                 print(f"Inference: {running_task_status}")
 
-    print(f"\n\nbatch_status for list: {fxc.get_batch_status(batch_task_id_list)}")
+    # Return useful information to user
+    output = fxc.get_batch_status(batch_task_id_list)
+    fit_results = {}
+    for task_id in output.keys():
+        result = output[task_id]["result"]
+        name = result["metadata"]["name"]
+        fit_results[name] = result
+
+    print(f"\n\nfit results: {fit_results}")
 
 
 if __name__ == "__main__":
