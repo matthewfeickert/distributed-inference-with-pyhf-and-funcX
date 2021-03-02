@@ -166,7 +166,8 @@ def main(args):
         name = result["metadata"]["name"]
         fit_results[name] = result
 
-    print(f"\n\nfit results: {fit_results}")
+    print(f"\n\nfit results:")
+    print(fit_results)
 
 
 if __name__ == "__main__":
