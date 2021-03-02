@@ -104,9 +104,10 @@ def main(args):
 
     # execute patch fits across workers and retrieve them when done
     n_patches = len(patchset.patches)
+    scaled_n_patches = n_patches * 20
     tasks = {}
-    for patch_idx in range(n_patches):
-        patch = patchset.patches[patch_idx]
+    for patch_idx in range(scaled_n_patches):
+        patch = patchset.patches[patch_idx % n_patches]
         task_id = fxc.run(
             workspace,
             patch.metadata,
@@ -117,7 +118,8 @@ def main(args):
         )
         tasks[patch.name] = {"id": task_id, "result": None}
 
-    while count_complete(tasks.values()) < n_patches:
+    # while count_complete(tasks.values()) < n_patches:
+    while count_complete(tasks.values()) < scaled_n_patches:
         for task in tasks.keys():
             if not tasks[task]["result"]:
                 try:
