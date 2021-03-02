@@ -136,14 +136,6 @@ def main(args):
 
         batch_status = fxc.get_batch_status(batch_task_id_list)
 
-        # Status update to user per loop
-        arbitrary_running_task_id = [
-            id for id in batch_status.keys() if id not in completed_task_ids
-        ][0]
-        running_task_status = batch_status[arbitrary_running_task_id]["status"]
-        if running_task_status != "success":
-            print(f"Inference: {running_task_status}")
-
         for task_id in batch_status.keys():
             task = batch_status[task_id]
             # If any task is still running do another loop
@@ -155,6 +147,16 @@ def main(args):
                     print(
                         f"Task {task['result']['metadata']['name']} complete: {len(completed_task_ids)}/{n_patches}"
                     )
+
+        # Status update to user per loop
+        running_task_ids = [
+            id for id in batch_status.keys() if id not in completed_task_ids
+        ]
+        if running_task_ids:
+            arbitrary_id = running_task_ids[0]
+            running_task_status = batch_status[arbitrary_id]["status"]
+            if running_task_status != "success":
+                print(f"Inference: {running_task_status}")
 
     print(f"\n\nbatch_status for list: {fxc.get_batch_status(batch_task_id_list)}")
 
