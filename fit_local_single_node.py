@@ -10,8 +10,8 @@ from pyhf.contrib.utils import download
 
 def infer_hypotest(workspace, patches):
     fit_results = {}
-    # for patch_idx in range(len(patches)):
-    for patch_idx in range(2):
+    for patch_idx in range(len(patches)):
+    # for patch_idx in range(2):
         patch = patches[patch_idx]
 
         tick = time.time()
