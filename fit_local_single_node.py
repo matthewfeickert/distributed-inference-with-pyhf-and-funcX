@@ -42,10 +42,12 @@ def main(args):
         with open(args.config_file, "r") as infile:
             config = json.load(infile)
 
+    # TODO: Make backend configurable from argparse CLI
     backend = "jax"
     if backend is None:
         backend = "numpy"
     pyhf.set_backend(backend)
+    print(f"pyhf backend: {pyhf.get_backend()[0].name}")
 
     pallet_path = Path(config["input_prefix"]).joinpath(config["pallet_name"])
 
