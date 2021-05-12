@@ -4,11 +4,22 @@ Example code for vCHEP 2021 paper "Distributed statistical inference with pyhf e
 
 ## Setup
 
-Create a Python 3 virtual environment and then install the dependencies in `requirements.txt`
+Create a Python 3 virtual environment and then install the dependencies in `requirements.txt` and `jax-requirements.txt`.
 
 ```shell
 (distributed-inference) $ python -m pip install --upgrade pip setuptools wheel
 (distributed-inference) $ python -m pip install -r requirements.txt
+(distributed-inference) $ python -m pip install -r jax-requirements.txt
+```
+
+### On XSEDE's EXPANSE
+
+On EXPANSE, to use a Python 3.7+ runtime Conda must be used, so crete a Conda environment from the `expanse-environment.yml` provided, which uses the different `requirements.txt` files to provide the dependencies.
+
+```
+$ conda env create -f expanse-environment.yml
+$ conda activate distributed-inference
+(distributed-inference) $
 ```
 
 ## Run
