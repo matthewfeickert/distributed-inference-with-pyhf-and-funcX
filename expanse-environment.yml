@@ -2,7 +2,9 @@ name: pyhf-funcx
 channels:
   - defaults
 dependencies:
-  - python>=3.7
+  - python>=3.7,<3.9
   - pip
   - pip:
+    - setuptools
+    - wheel
     - -r file:requirements.txt
