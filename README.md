@@ -27,6 +27,21 @@ Once a GPU session has been entered, source the `setup_funcx_test_env.sh` shell 
 (distributed-inference) $ . setup_funcx_test_env.sh
 ```
 
+#### Machine Configuration
+
+EXPANSE has the following
+
+```
+$ nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2020 NVIDIA Corporation
+Built on Thu_Jun_11_22:26:38_PDT_2020
+Cuda compilation tools, release 11.0, V11.0.194
+Build cuda_11.0_bu.TC445_37.28540450_0
+$ nvidia-smi --list-gpus
+GPU 0: Tesla V100-SXM2-32GB (UUID: GPU-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX)
+```
+
 ## Run
 
 Create a file named `endpoint_id.txt` in the top level of this repository and save your funcX endpoint ID into the file.
