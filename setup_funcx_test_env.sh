@@ -3,4 +3,6 @@ module purge
 module restore
 module load cuda
 module load anaconda3
-conda activate pyhf-funcx
+conda activate distributed-inference
+
+module list

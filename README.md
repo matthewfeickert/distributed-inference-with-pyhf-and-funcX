@@ -16,7 +16,7 @@ Create a Python 3 virtual environment and then install the dependencies in `requ
 Create a file named `endpoint_id.txt` in the top level of this repository and save your funcX endpoint ID into the file.
 
 ```shell
-(fitting-as-a-service) $ touch endpoint_id.txt
+(distributed-inference) $ touch endpoint_id.txt
 ```
 
 This will be read in during the run.

@@ -1,4 +1,4 @@
-name: pyhf-funcx
+name: distributed-inference
 channels:
   - defaults
 dependencies:
