@@ -8,3 +8,4 @@ dependencies:
     - setuptools
     - wheel
     - -r file:requirements.txt
+    - -r file:jax-requirements.txt
