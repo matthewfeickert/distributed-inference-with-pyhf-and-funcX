@@ -1,4 +1,8 @@
 name: pyhf-funcx
 channels:
   - defaults
-prefix: /home/feickert/.conda/envs/pyhf-funcx
+dependencies:
+  - python>=3.7
+  - pip
+  - pip:
+    - -r file:requirements.txt
