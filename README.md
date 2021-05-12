@@ -19,7 +19,12 @@ On EXPANSE, to use a Python 3.7+ runtime Conda must be used, so crete a Conda en
 ```
 $ conda env create -f expanse-environment.yml
 $ conda activate distributed-inference
-(distributed-inference) $
+```
+
+Once a GPU session has been entered, source the `setup_funcx_test_env.sh` shell script to activate the environment and load all required modules
+
+```
+(distributed-inference) $ . setup_funcx_test_env.sh
 ```
 
 ## Run
