@@ -6,7 +6,7 @@ Example code for vCHEP 2021 paper "Distributed statistical inference with pyhf e
 
 Create a Python 3 virtual environment and then install the dependencies in `requirements.txt` and `jax-requirements.txt`.
 
-```console
+```
 (distributed-inference) $ python -m pip install --upgrade pip setuptools wheel
 (distributed-inference) $ python -m pip install -r requirements.txt
 (distributed-inference) $ python -m pip install -r jax-requirements.txt
@@ -23,7 +23,7 @@ $ conda activate distributed-inference
 
 Once a GPU session has been entered, source the `setup_expanse_funcx_test_env.sh` shell script to activate the environment and load all required modules
 
-```console
+```
 (distributed-inference) $ . setup_expanse_funcx_test_env.sh
 ```
 
@@ -46,7 +46,7 @@ GPU 0: Tesla V100-SXM2-32GB (UUID: GPU-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX)
 
 Create a file named `endpoint_id.txt` in the top level of this repository and save your funcX endpoint ID into the file.
 
-```console
+```
 (distributed-inference) $ touch endpoint_id.txt
 ```
 
@@ -54,6 +54,6 @@ This will be read in during the run.
 
 Pass the config JSON file for the analysis you want to run to `fit_analysis.json`
 
-```console
+```
 (distributed-inference) $ python fit_analysis.py -c config/1Lbb.json
 ```
