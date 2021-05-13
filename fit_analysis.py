@@ -11,6 +11,8 @@ from pyhf.contrib.utils import download
 def prepare_workspace(data):
     import pyhf
 
+    pyhf.set_backend("jax")
+
     return pyhf.Workspace(data)
 
 
@@ -18,6 +20,8 @@ def infer_hypotest(workspace, metadata, patches):
     import time
 
     import pyhf
+
+    pyhf.set_backend("jax")
 
     tick = time.time()
     model = workspace.model(
