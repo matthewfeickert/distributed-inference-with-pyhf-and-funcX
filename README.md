@@ -14,7 +14,7 @@ Create a Python 3 virtual environment and then install the dependencies in `requ
 
 ### On XSEDE's EXPANSE
 
-On EXPANSE, to use a Python 3.7+ runtime Conda must be used, so crete a Conda environment from the `expanse-environment.yml` provided, which uses the different `requirements.txt` files to provide the dependencies.
+On EXPANSE, to use a Python 3.7+ runtime Conda must be used, so create a Conda environment from the `expanse-environment.yml` provided, which uses the different `requirements.txt` files to provide the dependencies.
 
 ```
 $ conda env create -f expanse-environment.yml
