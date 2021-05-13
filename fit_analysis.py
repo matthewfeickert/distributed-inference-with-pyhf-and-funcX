@@ -32,9 +32,7 @@ def infer_hypotest(workspace, metadata, patches):
     return {
         "metadata": metadata,
         "CLs_obs": float(
-            # pyhf.infer.hypotest(test_poi, data, model, test_stat="qtilde")
-            # Use v0.5.4 API until endpoint fixed
-            pyhf.infer.hypotest(test_poi, data, model, qtilde=True)
+            pyhf.infer.hypotest(test_poi, data, model, test_stat="qtilde")
         ),
         "Fit-Time": time.time() - tick,
     }
