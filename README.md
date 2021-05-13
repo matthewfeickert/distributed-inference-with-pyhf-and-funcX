@@ -29,7 +29,7 @@ Once a GPU session has been entered, source the `setup_funcx_test_env.sh` shell 
 
 #### Machine Configuration
 
-EXPANSE has the following
+EXPANSE has the following Nvidia drivers and GPUs:
 
 ```
 $ nvcc --version
