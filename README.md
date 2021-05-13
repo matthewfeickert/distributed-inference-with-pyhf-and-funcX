@@ -1,5 +1,7 @@
 # Distributed Inference with `pyhf` and `funcX`
 
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/matthewfeickert/distributed-inference-with-pyhf-and-funcX/main.svg)](https://results.pre-commit.ci/latest/github/matthewfeickert/distributed-inference-with-pyhf-and-funcX/main)
+
 Example code for vCHEP 2021 paper "Distributed statistical inference with pyhf enabled through funcX"
 
 ## Setup
