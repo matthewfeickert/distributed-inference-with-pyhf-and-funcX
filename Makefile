@@ -3,6 +3,7 @@ default: image
 all: image
 
 image:
+	docker pull python:3.8-buster
 	docker build . \
 	--pull \
 	--file Dockerfile \
