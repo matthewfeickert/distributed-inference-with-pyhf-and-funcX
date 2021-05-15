@@ -8,5 +8,5 @@ RUN apt-get update -y && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*
 COPY core-requirements.txt .
-RUN pip --no-cache-dir install --upgrade pip setuptools wheel && \
-    pip install -r core-requirements.txt
+RUN python -m pip --no-cache-dir install --upgrade pip setuptools wheel && \
+    python -m pip --no-cache-dir install -r core-requirements.txt
