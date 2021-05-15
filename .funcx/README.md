@@ -1,7 +1,7 @@
 # `funcX` Endpoint Setup
 
 ## Endpoint creation
-To create a `funcX` endpoint in an virtual environment with the `funcx-endpoint` library installed (such as provided by `requirements.txt`) run
+To create a `funcX` endpoint in an virtual environment with the `funcx-endpoint` library installed (such as provided by `core-requirements.txt`) run
 
 ```console
 $ funcx-endpoint configure pyhf
