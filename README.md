@@ -57,5 +57,19 @@ This will be read in during the run.
 Pass the config JSON file for the analysis you want to run to `fit_analysis.json`
 
 ```
-(distributed-inference) $ python fit_analysis.py -c config/1Lbb.json
+(distributed-inference) $ python fit_analysis.py -c config/1Lbb.json -b numpy
+```
+
+```console
+$ python fit_analysis.py --help
+usage: fit_analysis.py [-h] [-c CONFIG_FILE] [-b BACKEND]
+
+configuration arguments provided at run time from the CLI
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c CONFIG_FILE, --config-file CONFIG_FILE
+                        config file
+  -b BACKEND, --backend BACKEND
+                        pyhf backend str alias
 ```
