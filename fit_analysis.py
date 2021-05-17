@@ -51,6 +51,8 @@ def main(args):
         with open(args.config_file, "r") as infile:
             config = json.load(infile)
 
+    backend = args.backend
+
     pallet_path = Path(config["input_prefix"]).joinpath(config["pallet_name"])
 
     # locally get pyhf pallet for analysis
@@ -80,7 +82,7 @@ def main(args):
 
     # execute background only workspace
     prepare_task = fxc.run(
-        bkgonly_workspace, endpoint_id=pyhf_endpoint, function_id=prepare_func
+        bkgonly_workspace, backend, endpoint_id=pyhf_endpoint, function_id=prepare_func
     )
 
     # Read patchset in while background only workspace running
@@ -109,6 +111,7 @@ def main(args):
             workspace,
             patch.metadata,
             [patch.patch],
+            backend,
             endpoint_id=pyhf_endpoint,
             function_id=infer_func,
         )
