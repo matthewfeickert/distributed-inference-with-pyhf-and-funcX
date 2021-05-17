@@ -8,20 +8,20 @@ from funcx.sdk.client import FuncXClient
 from pyhf.contrib.utils import download
 
 
-def prepare_workspace(data):
+def prepare_workspace(data, backend):
     import pyhf
 
-    pyhf.set_backend("jax")
+    pyhf.set_backend(backend)
 
     return pyhf.Workspace(data)
 
 
-def infer_hypotest(workspace, metadata, patches):
+def infer_hypotest(workspace, metadata, patches, backend):
     import time
 
     import pyhf
 
-    pyhf.set_backend("jax")
+    pyhf.set_backend(backend)
 
     tick = time.time()
     model = workspace.model(
@@ -142,6 +142,14 @@ if __name__ == "__main__":
         type=str,
         default=None,
         help="config file",
+    )
+    cli_parser.add_argument(
+        "-b",
+        "--backend",
+        dest="backend",
+        type=str,
+        default="numpy",
+        help="pyhf backend str alias",
     )
     args, unknown = cli_parser.parse_known_args()
 
