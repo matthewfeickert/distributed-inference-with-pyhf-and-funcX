@@ -8,7 +8,7 @@ a conda environment from `core-requrements.txt`.
 We ran into several issues getting the endpoint to run correctly on BlueWaters
 given the lack of a Python 3.8 module.
 
-We wound up manually installing conda on the login node. The site's admins 
+We wound up manually installing conda on the login node. The site's admins
 state that conda is not supported on BW and not recomended, however we are only
 using conda on the login node to host the endpoint, so this doesn't seem against
 the spirit of their advice.
@@ -33,7 +33,7 @@ that are more easily provided by the conda installation process:
 $ conda install -c anaconda cryptography
 ```
 
-The pyzmq library version 22.0 is very picky about the GCC environment. 
+The pyzmq library version 22.0 is very picky about the GCC environment.
 
 ```console
 $ module load gcc/7.3.0
@@ -47,7 +47,7 @@ $ pip install funcx-endpoint
 ```
 
 ## Endpoint creation
-With funcX endpoint software installed, you need to create a template 
+With funcX endpoint software installed, you need to create a template
 environment for your endpoint.
 
 ```console
@@ -58,12 +58,12 @@ which will create a `funcX` configuration file at `~/.funcx/pyhf/config.py`.
 
 ## Endpoint configuration
 
-The endpoint configuration can now be revised for the purposes of the studies 
-needed. The configuration files used for this analysis are included in the 
+The endpoint configuration can now be revised for the purposes of the studies
+needed. The configuration files used for this analysis are included in the
 `/funcx` directory
 
 ### Customising the installation
-There are several parameters in the config file that can control scaling 
+There are several parameters in the config file that can control scaling
 behaviour for the endpoint:
 
 |Property|Description|
