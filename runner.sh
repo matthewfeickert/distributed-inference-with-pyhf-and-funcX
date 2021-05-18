@@ -5,14 +5,15 @@ config_file="config/${analysis_name}.json"
 endpoint_machine="expanse"
 backend="jax"
 n_trials=10
+output_dir="output/${analysis_name}/${endpoint_machine}/batch"
 
-if [ ! -d "output/${analysis_name}/${endpoint_machine}" ];then
-   mkdir -p "output/${analysis_name}/${endpoint_machine}"
+if [ ! -d "${output_dir}" ];then
+   mkdir -p "${output_dir}"
 fi
 
 for counter in $(seq 1 "${n_trials}");
 do
-   output_file="output/${analysis_name}/${endpoint_machine}/run_${counter}.log"
+   output_file="${output_dir}/run_${counter}.log"
 
    if [ -f "${output_file}" ];then
       echo "${output_file} already exists"
