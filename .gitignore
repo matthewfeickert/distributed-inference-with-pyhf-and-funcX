@@ -134,3 +134,6 @@ endpoint_id.txt
 # ignore files
 input/
 output/
+
+# ignore VSCode
+.vscode/
