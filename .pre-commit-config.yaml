@@ -4,7 +4,7 @@ ci:
 
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.0.1
     hooks:
     - id: check-added-large-files
     - id: check-case-conflict
@@ -18,6 +18,6 @@ repos:
     - id: trailing-whitespace
 
 -   repo: https://github.com/psf/black
-    rev: 21.5b1
+    rev: 21.6b0
     hooks:
     - id: black
