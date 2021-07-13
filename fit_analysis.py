@@ -1,4 +1,9 @@
 import argparse
+from funcx.utils.errors import TaskPending
+from funcx.utils.response_errors import TaskNotFound
+import traceback
+
+import funcx
 import json
 from pathlib import Path
 from time import sleep
@@ -70,15 +75,20 @@ def main(args):
         bkgonly_workspace = json.load(bkgonly_json)
 
     # Initialize funcX client
+    # fxc = FuncXClient(funcx_service_address="https://api.dev.funcx.org/v2")
     fxc = FuncXClient()
     fxc.max_requests = 200
 
-    with open("endpoint_id.txt") as endpoint_file:
+    with open("river_endpoint_id.txt") as endpoint_file:
         pyhf_endpoint = str(endpoint_file.read().rstrip())
 
     # register functions
     prepare_func = fxc.register_function(prepare_workspace)
+    def foo():
+        return "hi"
+
     infer_func = fxc.register_function(infer_hypotest)
+    # infer_func = fxc.register_function(foo)
 
     # execute background only workspace
     prepare_task = fxc.run(
@@ -125,8 +135,9 @@ def main(args):
                     print(
                         f"Task {task} complete, there are {count_complete(tasks.values())+1} results now"
                     )
+                    print(">>>>>>>", result)
                     tasks[task]["result"] = result
-                except Exception as excep:
+                except TaskPending as excep:
                     print(f"inference: {excep}")
                     sleep(15)
 
@@ -159,4 +170,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(parents=[cli_parser], add_help=False)
     args = parser.parse_args()
 
+    print("!!!!!!!!!!!!!!!", funcx.VERSION)
     main(args)
