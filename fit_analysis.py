@@ -73,7 +73,9 @@ def main(args):
         pyhf_endpoint = str(endpoint_file.read().rstrip())
 
     # execute background only workspace
-    prepare_task_future = fx.submit(prepare_workspace, bkgonly_workspace, backend, endpoint_id=pyhf_endpoint)
+    prepare_task_future = fx.submit(
+        prepare_workspace, bkgonly_workspace, backend, endpoint_id=pyhf_endpoint
+    )
 
     # Read patchset in while background only workspace running
     with open(
@@ -92,11 +94,14 @@ def main(args):
     for patch_idx in range(n_patches):
         patch = patchset.patches[patch_idx]
         futures.append(
-            fx.submit(infer_hypotest, workspace,
-                      patch.metadata,
-                      [patch.patch],
-                      backend,
-                      endpoint_id=pyhf_endpoint)
+            fx.submit(
+                infer_hypotest,
+                workspace,
+                patch.metadata,
+                [patch.patch],
+                backend,
+                endpoint_id=pyhf_endpoint,
+            )
         )
 
     for task in as_completed(futures):
