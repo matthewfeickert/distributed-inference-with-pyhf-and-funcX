@@ -1,10 +1,10 @@
 import argparse
 import json
 from pathlib import Path
-from time import sleep
 
 import pyhf
-from funcx.sdk.client import FuncXClient
+from funcx import FuncXClient, FuncXExecutor
+from concurrent.futures import as_completed
 from pyhf.contrib.utils import download
 
 
@@ -42,10 +42,6 @@ def infer_hypotest(workspace, metadata, patches, backend):
     }
 
 
-def count_complete(l):
-    return len(list(filter(lambda e: e["result"], l)))
-
-
 def main(args):
     if args.config_file is not None:
         with open(args.config_file, "r") as infile:
@@ -71,19 +67,13 @@ def main(args):
 
     # Initialize funcX client
     fxc = FuncXClient()
-    fxc.max_requests = 200
+    fx = FuncXExecutor(fxc, batch_enabled=True)
 
     with open("endpoint_id.txt") as endpoint_file:
         pyhf_endpoint = str(endpoint_file.read().rstrip())
 
-    # register functions
-    prepare_func = fxc.register_function(prepare_workspace)
-    infer_func = fxc.register_function(infer_hypotest)
-
     # execute background only workspace
-    prepare_task = fxc.run(
-        bkgonly_workspace, backend, endpoint_id=pyhf_endpoint, function_id=prepare_func
-    )
+    prepare_task_future = fx.submit(prepare_workspace, bkgonly_workspace, backend, endpoint_id=pyhf_endpoint)
 
     # Read patchset in while background only workspace running
     with open(
@@ -91,47 +81,28 @@ def main(args):
     ) as patchset_json:
         patchset = pyhf.PatchSet(json.load(patchset_json))
 
-    workspace = None
-    while not workspace:
-        try:
-            workspace = fxc.get_result(prepare_task)
-        except Exception as excep:
-            print(f"prepare: {excep}")
-            sleep(10)
-
+    workspace = prepare_task_future.result()
     print("--------------------")
-    print(workspace)
+    print("Background Workspace Constructed")
+    print("--------------------")
 
     # execute patch fits across workers and retrieve them when done
     n_patches = len(patchset.patches)
-    tasks = {}
+    futures = []
     for patch_idx in range(n_patches):
         patch = patchset.patches[patch_idx]
-        task_id = fxc.run(
-            workspace,
-            patch.metadata,
-            [patch.patch],
-            backend,
-            endpoint_id=pyhf_endpoint,
-            function_id=infer_func,
+        futures.append(
+            fx.submit(infer_hypotest, workspace,
+                      patch.metadata,
+                      [patch.patch],
+                      backend,
+                      endpoint_id=pyhf_endpoint)
         )
-        tasks[patch.name] = {"id": task_id, "result": None}
 
-    while count_complete(tasks.values()) < n_patches:
-        for task in tasks.keys():
-            if not tasks[task]["result"]:
-                try:
-                    result = fxc.get_result(tasks[task]["id"])
-                    print(
-                        f"Task {task} complete, there are {count_complete(tasks.values())+1} results now"
-                    )
-                    tasks[task]["result"] = result
-                except Exception as excep:
-                    print(f"inference: {excep}")
-                    sleep(15)
+    for task in as_completed(futures):
+        print(task.result())
 
     print("--------------------")
-    print(tasks.values())
 
 
 if __name__ == "__main__":
