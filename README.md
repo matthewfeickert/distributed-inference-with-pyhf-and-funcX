@@ -54,7 +54,7 @@ Create a file named `endpoint_id.txt` in the top level of this repository and sa
 
 This will be read in during the run.
 
-Pass the config JSON file for the analysis you want to run to `fit_analysis.json`
+Pass the config JSON file for the analysis you want to run to `fit_analysis.py`
 
 ```
 (distributed-inference) $ python fit_analysis.py -c config/1Lbb.json -b numpy
