@@ -84,9 +84,10 @@ def main(args):
         patchset = pyhf.PatchSet(json.load(patchset_json))
 
     workspace = prepare_task_future.result()
-    print("--------------------")
-    print("Background Workspace Constructed")
-    print("--------------------")
+    message = "# Background Workspace Constructed"
+    print("-" * len(message))
+    print(message)
+    print("-" * len(message))
 
     # execute patch fits across workers and retrieve them when done
     n_patches = len(patchset.patches)
@@ -107,7 +108,7 @@ def main(args):
     for task in as_completed(futures):
         print(task.result())
 
-    print("--------------------")
+    print("-" * len(message))
 
 
 if __name__ == "__main__":
