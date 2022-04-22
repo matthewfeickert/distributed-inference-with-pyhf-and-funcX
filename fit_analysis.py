@@ -125,7 +125,7 @@ def main(args):
     print("-" * len(message))
 
     with open("results.json", "w") as results_file:
-        results_file.write(json.dumps(results, indent=2))
+        results_file.write(json.dumps(results, sort_keys=True, indent=2))
 
 
 if __name__ == "__main__":
