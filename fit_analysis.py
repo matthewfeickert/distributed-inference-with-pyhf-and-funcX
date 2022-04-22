@@ -1,11 +1,12 @@
 import argparse
 import json
+from concurrent.futures import as_completed
 from pathlib import Path
 
 import pyhf
-from funcx import FuncXClient, FuncXExecutor
-from concurrent.futures import as_completed
 from pyhf.contrib.utils import download
+
+from funcx import FuncXClient, FuncXExecutor
 
 
 def prepare_workspace(data, backend):
