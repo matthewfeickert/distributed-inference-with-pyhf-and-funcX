@@ -1,11 +1,12 @@
 import argparse
 import json
+from concurrent.futures import as_completed
 from pathlib import Path
 
 import pyhf
-from funcx import FuncXClient, FuncXExecutor
-from concurrent.futures import as_completed
 from pyhf.contrib.utils import download
+
+from funcx import FuncXClient, FuncXExecutor
 
 
 def prepare_workspace(data, backend):
@@ -33,12 +34,15 @@ def infer_hypotest(workspace, metadata, patches, backend):
     )
     data = workspace.data(model)
     test_poi = 1.0
+    CLs_obs, CLs_exp_band = pyhf.infer.hypotest(
+        test_poi, data, model, return_expected_set=True, test_stat="qtilde"
+    )
+    fit_time = time.time() - tick
     return {
         "metadata": metadata,
-        "CLs_obs": float(
-            pyhf.infer.hypotest(test_poi, data, model, test_stat="qtilde")
-        ),
-        "Fit-Time": time.time() - tick,
+        "CLs_obs": float(CLs_obs),
+        "CLs_exp": [float(cls_exp) for cls_exp in CLs_exp_band],
+        "fit_time": fit_time,
     }
 
 
@@ -84,13 +88,15 @@ def main(args):
         patchset = pyhf.PatchSet(json.load(patchset_json))
 
     workspace = prepare_task_future.result()
-    print("--------------------")
-    print("Background Workspace Constructed")
-    print("--------------------")
+    message = "# Background Workspace Constructed"
+    print("-" * len(message))
+    print(message)
+    print("-" * len(message))
 
     # execute patch fits across workers and retrieve them when done
     n_patches = len(patchset.patches)
     futures = []
+    results = {}
     for patch_idx in range(n_patches):
         patch = patchset.patches[patch_idx]
         futures.append(
@@ -105,9 +111,21 @@ def main(args):
         )
 
     for task in as_completed(futures):
-        print(task.result())
+        task_result = task.result()
+        results[task_result["metadata"]["name"]] = {
+            "mass_hypotheses": task_result["metadata"]["values"],
+            "CLs_obs": task_result["CLs_obs"],
+            "CLs_exp": task_result["CLs_exp"],
+            "fit_time": task_result["fit_time"],
+        }
+        print(
+            f'{task_result["metadata"]["name"]}: {results[task_result["metadata"]["name"]]}'
+        )
 
-    print("--------------------")
+    print("-" * len(message))
+
+    with open("results.json", "w") as results_file:
+        results_file.write(json.dumps(results, sort_keys=True, indent=2))
 
 
 if __name__ == "__main__":
