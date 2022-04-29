@@ -2,7 +2,7 @@
 
 ## Installing funcX
 On sites that support Python 3.8 and conda you should be able to simply create
-a conda environment from `requrements.txt`.
+a conda environment from `requrements.txt` or `requrements.lock`.
 
 ### Special Handling for BlueWaters
 We ran into several issues getting the endpoint to run correctly on BlueWaters
