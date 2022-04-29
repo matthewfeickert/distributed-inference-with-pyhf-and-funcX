@@ -13,6 +13,15 @@ Create a Python 3 virtual environment and then install the `pyhf` and `funcX` de
 (distributed-inference) $ python -m pip install -r requirements.txt
 ```
 
+### Reproducible environment
+
+To install a reproducible environment that is consistent down to the hash level, use `pip-compile` to compile a lock file from `requirements.txt` and install it following the `pip-secure-install` recommendations
+
+```
+(distributed-inference) $ bash compile_dependencies.sh
+(distributed-inference) $ bash secure_install.sh
+```
+
 ### On XSEDE's EXPANSE
 
 On EXPANSE, to use a Python 3.7+ runtime Conda must be used, so create a Conda environment from the `expanse-environment.yml` provided, which uses the different `requirements.txt` files to provide the dependencies.
