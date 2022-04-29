@@ -15,12 +15,14 @@ Create a Python 3 virtual environment and then install the `pyhf` and `funcX` de
 
 ### Reproducible environment
 
-To install a reproducible environment that is consistent down to the hash level, use `pip-compile` to compile a lock file from `requirements.txt` and install it following the `pip-secure-install` recommendations
+To install a reproducible environment that is consistent down to the hash level, use `pip-compile` to compile a lock file from `requirements.txt` and install it following the [`pip-secure-install`][pip-secure-install] recommendations.
 
 ```
 (distributed-inference) $ bash compile_dependencies.sh
 (distributed-inference) $ bash secure_install.sh
 ```
+
+[pip-secure-install]: https://github.com/brettcannon/pip-secure-install
 
 ### On XSEDE's EXPANSE
 
