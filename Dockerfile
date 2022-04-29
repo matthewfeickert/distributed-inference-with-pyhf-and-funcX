@@ -16,8 +16,9 @@ COPY requirements.lock .
 # c.f. https://github.com/brettcannon/pip-secure-install
 # c.f. https://twitter.com/brettsky/status/1486137764315688961
 RUN python -m pip --no-cache-dir install --upgrade pip setuptools wheel && \
-    python -m pip install \
+    python -m pip --no-cache-dir install \
         --no-deps \
         --require-hashes \
         --only-binary :all: \
+        --no-binary jax \
         --requirement requirements.lock
