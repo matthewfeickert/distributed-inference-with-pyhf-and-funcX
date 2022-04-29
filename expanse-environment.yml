@@ -8,5 +8,4 @@ dependencies:
   - pip:
     - setuptools
     - wheel
-    - -r file:core-requirements.txt
-    - -r file:jax-requirements.txt
+    - -r file:requirements.lock
