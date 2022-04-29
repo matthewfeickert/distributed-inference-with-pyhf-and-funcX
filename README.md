@@ -6,12 +6,11 @@ Example code for vCHEP 2021 paper "Distributed statistical inference with pyhf e
 
 ## Setup
 
-Create a Python 3 virtual environment and then install the `pyhf` and `funcX` dependencies in `core-requirements.txt` and the JAX backend dependencies in `jax-requirements.txt`.
+Create a Python 3 virtual environment and then install the `pyhf` and `funcX` dependencies in `requirements.txt`.
 
 ```
 (distributed-inference) $ python -m pip install --upgrade pip setuptools wheel
-(distributed-inference) $ python -m pip install -r core-requirements.txt
-(distributed-inference) $ python -m pip install -r jax-requirements.txt
+(distributed-inference) $ python -m pip install -r requirements.txt
 ```
 
 ### On XSEDE's EXPANSE

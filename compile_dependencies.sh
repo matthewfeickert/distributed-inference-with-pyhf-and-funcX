@@ -3,8 +3,6 @@
 base_image="python:3.8-buster"
 docker pull "${base_image}"
 
-cat core-requirements.txt jax-requirements.txt > requirements.txt
-
 docker run --rm \
     -v $PWD:/read \
     "${base_image}" /bin/bash -c 'python -m venv venv && \
