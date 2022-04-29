@@ -1,3 +1,8 @@
+# funcx
+funcx==0.3.9
+funcx-endpoint==0.3.9
+# pyhf
+pyhf[minuit,contrib]==0.6.3
 # jax
 jax==0.3.7
 # Place --find-links _before_ jaxlib to satisfy Conda

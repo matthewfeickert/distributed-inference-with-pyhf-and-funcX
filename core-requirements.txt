@@ -1,5 +1,0 @@
-# funcx
-funcx==0.3.9
-funcx-endpoint==0.3.9
-# pyhf
-pyhf[minuit,contrib]==0.6.3
