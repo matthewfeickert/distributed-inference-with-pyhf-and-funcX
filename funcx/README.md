@@ -2,14 +2,14 @@
 
 ## Installing funcX
 On sites that support Python 3.8 and conda you should be able to simply create
-a conda environment from `core-requrements.txt`.
+a conda environment from `requrements.txt` or `requrements.lock`.
 
 ### Special Handling for BlueWaters
 We ran into several issues getting the endpoint to run correctly on BlueWaters
 given the lack of a Python 3.8 module.
 
 We wound up manually installing conda on the login node. The site's admins
-state that conda is not supported on BW and not recomended, however we are only
+state that conda is not supported on BW and not recommended, however we are only
 using conda on the login node to host the endpoint, so this doesn't seem against
 the spirit of their advice.
 
