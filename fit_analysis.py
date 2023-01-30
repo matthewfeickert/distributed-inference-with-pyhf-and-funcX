@@ -2,15 +2,15 @@ import argparse
 import json
 from concurrent.futures import as_completed
 from pathlib import Path
+import time
 
 import pyhf
 from pyhf.contrib.utils import download
 
-from funcx import FuncXClient, FuncXExecutor
+# from funcx import FuncXClient, FuncXExecutor
 
 
 def prepare_workspace(data, backend):
-    import pyhf
 
     pyhf.set_backend(backend)
 
@@ -18,9 +18,7 @@ def prepare_workspace(data, backend):
 
 
 def infer_hypotest(workspace, metadata, patches, backend):
-    import time
 
-    import pyhf
 
     pyhf.set_backend(backend)
 
@@ -70,16 +68,16 @@ def main(args):
         bkgonly_workspace = json.load(bkgonly_json)
 
     # Initialize funcX client
-    fxc = FuncXClient()
-    fx = FuncXExecutor(fxc, batch_enabled=True)
+    # fxc = FuncXClient()
+    # fx = FuncXExecutor(fxc, batch_enabled=True)
 
-    with open("endpoint_id.txt") as endpoint_file:
-        pyhf_endpoint = str(endpoint_file.read().rstrip())
+    # with open("endpoint_id.txt") as endpoint_file:
+    #     pyhf_endpoint = str(endpoint_file.read().rstrip())
 
     # execute background only workspace
-    prepare_task_future = fx.submit(
-        prepare_workspace, bkgonly_workspace, backend, endpoint_id=pyhf_endpoint
-    )
+    # prepare_task_future = fx.submit(
+    #     prepare_workspace, bkgonly_workspace, backend, endpoint_id=pyhf_endpoint
+    # )
 
     # Read patchset in while background only workspace running
     with open(
@@ -87,7 +85,7 @@ def main(args):
     ) as patchset_json:
         patchset = pyhf.PatchSet(json.load(patchset_json))
 
-    workspace = prepare_task_future.result()
+    workspace = prepare_workspace(bkgonly_workspace, backend)
     message = "# Background Workspace Constructed"
     print("-" * len(message))
     print(message)
@@ -95,23 +93,16 @@ def main(args):
 
     # execute patch fits across workers and retrieve them when done
     n_patches = len(patchset.patches)
+    print("Number of patches are",n_patches)
     futures = []
     results = {}
-    for patch_idx in range(n_patches):
+    for patch_idx in range(5):
         patch = patchset.patches[patch_idx]
-        futures.append(
-            fx.submit(
-                infer_hypotest,
+        task_result = infer_hypotest(
                 workspace,
                 patch.metadata,
                 [patch.patch],
-                backend,
-                endpoint_id=pyhf_endpoint,
-            )
-        )
-
-    for task in as_completed(futures):
-        task_result = task.result()
+                backend)
         results[task_result["metadata"]["name"]] = {
             "mass_hypotheses": task_result["metadata"]["values"],
             "CLs_obs": task_result["CLs_obs"],
