@@ -7,16 +7,19 @@ from pyhf.contrib.utils import download
 
 from funcx import FuncXExecutor
 
+
 def prepare_workspace(data, backend):
     import pyhf
 
     pyhf.set_backend(backend)
     return pyhf.Workspace(data)
 
+
 def infer_hypotest(workspace, metadata, patches, backend):
     import time
     import pyhf
     import numpy as np
+
     pyhf.set_backend(backend)
     tick = time.time()
     model = workspace.model(
@@ -57,7 +60,9 @@ def main(args):
     if config["analysis_dir"] is not None:
         pallet_path = pallet_path.joinpath(config["analysis_dir"])
 
-    with open(pallet_path.joinpath(f"{analysis_prefix_str}BkgOnly.json")) as bkgonly_json:
+    with open(
+        pallet_path.joinpath(f"{analysis_prefix_str}BkgOnly.json")
+    ) as bkgonly_json:
         bkgonly_workspace = json.load(bkgonly_json)
 
     # Initialize funcX client
@@ -65,11 +70,17 @@ def main(args):
     with open("funcx/delta/funcx.json", "r") as funcx_file:
         funcx_object = json.load(funcx_file)
 
-    with open(pallet_path.joinpath(f"{analysis_prefix_str}patchset.json")) as patchset_json:
+    with open(
+        pallet_path.joinpath(f"{analysis_prefix_str}patchset.json")
+    ) as patchset_json:
         patchset = pyhf.PatchSet(json.load(patchset_json))
 
     print("The endpoint is", funcx_object.get("endpoint_id"))
-    fxe = FuncXExecutor(endpoint_id=funcx_object.get("endpoint_id"), container_id=funcx_object.get("container_id", None), batch_size=64)
+    fxe = FuncXExecutor(
+        endpoint_id=funcx_object.get("endpoint_id"),
+        container_id=funcx_object.get("container_id", None),
+        batch_size=64,
+    )
     future = fxe.submit(prepare_workspace, bkgonly_workspace, backend)
     workspace = future.result()
 

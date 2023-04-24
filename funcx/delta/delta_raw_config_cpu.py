@@ -6,9 +6,9 @@ from funcx_endpoint.endpoint.utils.config import Config
 from funcx_endpoint.executors import HighThroughputExecutor
 
 user_opts = {
-    'pyhf': {
-        'worker_init': 'bash; conda activate distributed-inference',
-        'scheduler_options': '#SBATCH --account=bbmi-delta-cpu',
+    "pyhf": {
+        "worker_init": "bash; conda activate distributed-inference",
+        "scheduler_options": "#SBATCH --account=bbmi-delta-cpu",
     }
 }
 
@@ -20,28 +20,25 @@ config = Config(
             worker_debug=True,
             address=address_by_interface("hsn0"),
             provider=SlurmProvider(
-                partition='cpu',
+                partition="cpu",
                 launcher=SrunLauncher(),
                 # string to prepend to #SBATCH blocks in the submit
                 # script to the scheduler eg: '#SBATCH --constraint=knl,quad,cache'
-                scheduler_options=user_opts['pyhf']['scheduler_options'],
-
+                scheduler_options=user_opts["pyhf"]["scheduler_options"],
                 # Command to be run before starting a worker, such as:
                 # 'module load Anaconda; source activate parsl_env'.
-                worker_init=user_opts['pyhf']['worker_init'],
-
+                worker_init=user_opts["pyhf"]["worker_init"],
                 # Scale between 0-1 blocks with 2 nodes per block
                 nodes_per_block=2,
                 init_blocks=0,
                 min_blocks=0,
                 mem_per_node=10,
                 max_blocks=10,
-
                 # Hold blocks for 30 minutes
-                walltime='06:00:00'
+                walltime="06:00:00",
             ),
         )
     ],
     heartbeat_period=15,
-    heartbeat_threshold=300
+    heartbeat_threshold=300,
 )

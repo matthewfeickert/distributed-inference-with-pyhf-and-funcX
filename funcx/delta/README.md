@@ -8,7 +8,7 @@ a conda environment from `requrements.txt` or `requrements.lock`.
 Delta requires setup for running distributed inference on Singularity container.
 
 #### Apptainer
-We are using an Apptainer to manage dependencies on Delta. 
+We are using an Apptainer to manage dependencies on Delta.
 [distributed-inference.def](funcx/delta/distributed_inference.def) builds the container.
 
 ```console
@@ -37,4 +37,3 @@ which will create a `funcX` configuration file at `~/.funcx/pyhf/config.py`.
 ```console
 $ funcx-endpoint start pyhf
 ```
-
