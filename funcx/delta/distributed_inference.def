@@ -1,0 +1,8 @@
+BootStrap: docker
+From: pyhf/cuda:0.7.0-jax-cuda-11.6.0-cudnn8
+
+%post
+    git clone https://github.com/ritwik-deshpande/distributed-inference-with-pyhf-and-funcX.git
+    cd distributed-inference-with-pyhf-and-funcX
+    pip install -r requirements.txt
+    pip freeze
