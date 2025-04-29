@@ -2,28 +2,25 @@ import argparse
 import json
 from concurrent.futures import as_completed
 from pathlib import Path
-
 import pyhf
 from pyhf.contrib.utils import download
 
-from funcx import FuncXClient, FuncXExecutor
+from funcx import FuncXExecutor
 
 
 def prepare_workspace(data, backend):
     import pyhf
 
     pyhf.set_backend(backend)
-
     return pyhf.Workspace(data)
 
 
 def infer_hypotest(workspace, metadata, patches, backend):
     import time
-
     import pyhf
+    import numpy as np
 
     pyhf.set_backend(backend)
-
     tick = time.time()
     model = workspace.model(
         patches=patches,
@@ -50,7 +47,6 @@ def main(args):
     if args.config_file is not None:
         with open(args.config_file, "r") as infile:
             config = json.load(infile)
-
     backend = args.backend
 
     pallet_path = Path(config["input_prefix"]).joinpath(config["pallet_name"])
@@ -70,45 +66,44 @@ def main(args):
         bkgonly_workspace = json.load(bkgonly_json)
 
     # Initialize funcX client
-    fxc = FuncXClient()
-    fx = FuncXExecutor(fxc, batch_enabled=True)
 
-    with open("endpoint_id.txt") as endpoint_file:
-        pyhf_endpoint = str(endpoint_file.read().rstrip())
+    with open("funcx/delta/funcx.json", "r") as funcx_file:
+        funcx_object = json.load(funcx_file)
 
-    # execute background only workspace
-    prepare_task_future = fx.submit(
-        prepare_workspace, bkgonly_workspace, backend, endpoint_id=pyhf_endpoint
-    )
-
-    # Read patchset in while background only workspace running
     with open(
         pallet_path.joinpath(f"{analysis_prefix_str}patchset.json")
     ) as patchset_json:
         patchset = pyhf.PatchSet(json.load(patchset_json))
 
-    workspace = prepare_task_future.result()
+    print("The endpoint is", funcx_object.get("endpoint_id"))
+    fxe = FuncXExecutor(
+        endpoint_id=funcx_object.get("endpoint_id"),
+        container_id=funcx_object.get("container_id", None),
+        batch_size=64,
+    )
+    future = fxe.submit(prepare_workspace, bkgonly_workspace, backend)
+    workspace = future.result()
+
+    # Read patchset in while background only workspace running
     message = "# Background Workspace Constructed"
-    print("-" * len(message))
     print(message)
-    print("-" * len(message))
 
     # execute patch fits across workers and retrieve them when done
     n_patches = len(patchset.patches)
     futures = []
-    results = {}
     for patch_idx in range(n_patches):
         patch = patchset.patches[patch_idx]
         futures.append(
-            fx.submit(
+            fxe.submit(
                 infer_hypotest,
                 workspace,
                 patch.metadata,
                 [patch.patch],
                 backend,
-                endpoint_id=pyhf_endpoint,
             )
         )
+
+    results = {}
 
     for task in as_completed(futures):
         task_result = task.result()
@@ -121,8 +116,6 @@ def main(args):
         print(
             f'{task_result["metadata"]["name"]}: {results[task_result["metadata"]["name"]]}'
         )
-
-    print("-" * len(message))
 
     with open("results.json", "w") as results_file:
         results_file.write(json.dumps(results, sort_keys=True, indent=2))
@@ -148,7 +141,6 @@ if __name__ == "__main__":
         default="numpy",
         help="pyhf backend str alias",
     )
-    args, unknown = cli_parser.parse_known_args()
 
     parser = argparse.ArgumentParser(parents=[cli_parser], add_help=False)
     args = parser.parse_args()

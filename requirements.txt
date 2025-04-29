@@ -1,10 +1,5 @@
 # funcx
-funcx==0.3.9
-funcx-endpoint==0.3.9
+funcx==1.0.10
+funcx-endpoint==1.0.10
 # pyhf
-pyhf[minuit,contrib]==0.6.3
-# jax
-jax==0.3.7
-# Place --find-links _before_ jaxlib to satisfy Conda
---find-links https://storage.googleapis.com/jax-releases/jax_releases.html
-jaxlib==0.3.7
+pyhf[jax,minuit,contrib]==0.7.0
